@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dengue Risk &amp; Warning-Sign Assessment Expert System</title>
+    <meta name="description" content="Academic Expert System prototype for dengue risk and warning-sign assessment using rule-based clinical decision support.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- ===== HEADER ===== -->
+    <header id="app-header">
+        <div class="header-content">
+            <div class="header-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                </svg>
+            </div>
+            <div class="header-text">
+                <h1>Dengue Risk &amp; Warning-Sign Assessment</h1>
+                <p class="subtitle">Rule-Based Clinical Decision-Support Prototype</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- ===== DISCLAIMER BANNER ===== -->
+    <div id="disclaimer-banner" class="disclaimer-banner">
+        <div class="disclaimer-icon">⚠️</div>
+        <p><strong>Academic Disclaimer:</strong> This system is an academic Expert System prototype developed for educational purposes. It applies a predefined set of source-derived dengue clinical rules to the information entered by the user. It is <strong>not</strong> a medical diagnostic tool and does <strong>not</strong> replace assessment by a qualified healthcare professional. If severe or concerning symptoms are present, seek appropriate medical care.</p>
+    </div>
+
+    <main id="app-main">
+        <!-- ===== INPUT FORM ===== -->
+        <form id="assessment-form" onsubmit="return false;">
+            
+            <!-- Section 1: Basic Information -->
+            <section class="card" id="section-basic">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                    </div>
+                    <div>
+                        <h2>Patient Information</h2>
+                        <p class="card-subtitle">Basic reference details</p>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="patient-id">Patient / Reference ID</label>
+                            <input type="text" id="patient-id" placeholder="e.g., P001" autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="day-of-illness">Day of Illness</label>
+                            <input type="number" id="day-of-illness" min="1" max="30" placeholder="e.g., 5">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 2: Dengue-Compatible Symptoms -->
+            <section class="card" id="section-symptoms">
+                <div class="card-header">
+                    <div class="card-icon icon-symptoms">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                    </div>
+                    <div>
+                        <h2>Dengue-Compatible Symptoms</h2>
+                        <p class="card-subtitle">Select all symptoms currently present</p>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="checkbox-grid">
+                        <label class="checkbox-item" id="chk-high-fever">
+                            <input type="checkbox" name="symptoms" value="high_fever">
+                            <span class="checkmark"></span>
+                            <span class="label-text">High Fever</span>
+                        </label>
+                        <label class="checkbox-item" id="chk-severe-headache">
+                            <input type="checkbox" name="symptoms" value="severe_headache">
+                            <span class="checkmark"></span>
+                            <span class="label-text">Severe Headache</span>
+                        </label>
+                        <label class="checkbox-item" id="chk-pain-eyes">
+                            <input type="checkbox" name="symptoms" value="pain_behind_eyes">
+                            <span class="checkmark"></span>
+                            <span class="label-text">Pain Behind the Eyes</span>
+                        </label>
+                        <label class="checkbox-item" id="chk-muscle-joint">
+                            <input type="checkbox" name="symptoms" value="muscle_joint_pain">
+                            <span class="checkmark"></span>
+                            <span class="label-text">Muscle / Joint Pain</span>
+                        </label>
+                        <label class="checkbox-item" id="chk-nausea">
+                            <input type="checkbox" name="symptoms" value="nausea_vomiting">
+                            <span class="checkmark"></span>
+                            <span class="label-text">Nausea / Vomiting</span>
+                        </label>
+                        <label class="checkbox-item" id="chk-rash">
+                            <input type="checkbox" name="symptoms" value="skin_rash">
+                            <span class="checkmark"></span>
+                            <span class="label-text">Skin Rash</span>
+                        </label>
+                        <label class="checkbox-item" id="chk-leucopenia">
+                            <input type="checkbox" name="symptoms" value="leucopenia">
+                            <span class="checkmark"></span>
+                            <span class="label-text">Leucopenia</span>
+                        </label>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 3: Warning Signs -->
+            <section class="card" id="section-warning">
+                <div class="card-header">
+                    <div class="card-icon icon-warning">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    </div>
+                    <div>
+                        <h2>Warning Signs</h2>
+                        <p class="card-subtitle">Select any dengue warning signs observed</p>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="checkbox-grid">
+                        <label class="checkbox-item" id="chk-abdominal">
+                            <input type="checkbox" name="symptoms" value="abdominal_pain">
+                            <span class="checkmark"></span>
+                            <span class="label-text">Abdominal Pain / Tenderness</span>
+                        </label>
+                        <label class="checkbox-item" id="chk-persistent-vomit">
+                            <input type="checkbox" name="symptoms" value="persistent_vomiting">
+                            <span class="checkmark"></span>
+                            <span class="label-text">Persistent Vomiting</span>
+                        </label>
+                        <label class="checkbox-item" id="chk-fluid">
+                            <input type="checkbox" name="symptoms" value="clinical_fluid_accumulation">
+                            <span class="checkmark"></span>
+                            <span class="label-text">Clinical Fluid Accumulation</span>
+                        </label>
+                        <label class="checkbox-item" id="chk-mucosal">
+                            <input type="checkbox" name="symptoms" value="mucosal_bleeding">
+                            <span class="checkmark"></span>
+                            <span class="label-text">Mucosal Bleeding</span>
+                        </label>
+                        <label class="checkbox-item" id="chk-lethargy">
+                            <input type="checkbox" name="symptoms" value="lethargy">
+                            <span class="checkmark"></span>
+                            <span class="label-text">Lethargy</span>
+                        </label>
+                        <label class="checkbox-item" id="chk-restlessness">
+                            <input type="checkbox" name="symptoms" value="restlessness">
+                            <span class="checkmark"></span>
+                            <span class="label-text">Restlessness</span>
+                        </label>
+                        <label class="checkbox-item" id="chk-liver">
+                            <input type="checkbox" name="symptoms" value="liver_enlargement_over_2cm">
+                            <span class="checkmark"></span>
+                            <span class="label-text">Liver Enlargement &gt;2 cm</span>
+                        </label>
+                        <label class="checkbox-item" id="chk-haematocrit">
+                            <input type="checkbox" name="symptoms" value="increased_haematocrit">
+                            <span class="checkmark"></span>
+                            <span class="label-text">Increased Haematocrit</span>
+                        </label>
+                        <label class="checkbox-item" id="chk-platelet">
+                            <input type="checkbox" name="symptoms" value="rapid_platelet_decrease">
+                            <span class="checkmark"></span>
+                            <span class="label-text">Rapid Decrease in Platelet Count</span>
+                        </label>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 4: Severe Dengue Indicators -->
+            <section class="card" id="section-severe">
+                <div class="card-header">
+                    <div class="card-icon icon-severe">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    </div>
+                    <div>
+                        <h2>Severe Dengue Indicators</h2>
+                        <p class="card-subtitle">Select any severe clinical findings</p>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="checkbox-grid">
+                        <label class="checkbox-item" id="chk-plasma">
+                            <input type="checkbox" name="symptoms" value="severe_plasma_leakage">
+                            <span class="checkmark"></span>
+                            <span class="label-text">Severe Plasma Leakage</span>
+                        </label>
+                        <label class="checkbox-item" id="chk-shock">
+                            <input type="checkbox" name="symptoms" value="shock">
+                            <span class="checkmark"></span>
+                            <span class="label-text">Shock</span>
+                        </label>
+                        <label class="checkbox-item" id="chk-respiratory">
+                            <input type="checkbox" name="symptoms" value="respiratory_distress">
+                            <span class="checkmark"></span>
+                            <span class="label-text">Respiratory Distress</span>
+                        </label>
+                        <label class="checkbox-item" id="chk-severe-bleeding">
+                            <input type="checkbox" name="symptoms" value="severe_bleeding">
+                            <span class="checkmark"></span>
+                            <span class="label-text">Severe Bleeding</span>
+                        </label>
+                        <label class="checkbox-item" id="chk-organ">
+                            <input type="checkbox" name="symptoms" value="severe_organ_impairment">
+                            <span class="checkmark"></span>
+                            <span class="label-text">Severe Organ Impairment</span>
+                        </label>
+                        <label class="checkbox-item" id="chk-ast-alt">
+                            <input type="checkbox" name="symptoms" value="ast_alt_1000_or_more">
+                            <span class="checkmark"></span>
+                            <span class="label-text">AST / ALT ≥ 1000</span>
+                        </label>
+                        <label class="checkbox-item" id="chk-consciousness">
+                            <input type="checkbox" name="symptoms" value="impaired_consciousness">
+                            <span class="checkmark"></span>
+                            <span class="label-text">Impaired Consciousness</span>
+                        </label>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 5: Disease Phase -->
+            <section class="card" id="section-phase">
+                <div class="card-header">
+                    <div class="card-icon icon-phase">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    </div>
+                    <div>
+                        <h2>Temperature / Disease Phase</h2>
+                        <p class="card-subtitle">Current disease phase observations</p>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="checkbox-grid">
+                        <label class="checkbox-item" id="chk-temp-decrease">
+                            <input type="checkbox" name="symptoms" value="temperature_decreasing">
+                            <span class="checkmark"></span>
+                            <span class="label-text">Temperature Decreasing</span>
+                        </label>
+                        <label class="checkbox-item" id="chk-transition">
+                            <input type="checkbox" name="symptoms" value="warning_sign_transition_period">
+                            <span class="checkmark"></span>
+                            <span class="label-text">Warning Signs Appearing Around Phase Transition</span>
+                        </label>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Submit Button -->
+            <div class="submit-container">
+                <button type="button" id="btn-assess" onclick="runAssessment()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    Run Assessment
+                </button>
+                <button type="button" id="btn-clear" onclick="clearForm()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+                    Clear All
+                </button>
+            </div>
+        </form>
+
+        <!-- ===== LOADING INDICATOR ===== -->
+        <div id="loading" class="loading hidden">
+            <div class="spinner"></div>
+            <p>Running Prolog inference engine...</p>
+        </div>
+
+        <!-- ===== ERROR MESSAGE ===== -->
+        <div id="error-message" class="error-card hidden">
+            <div class="error-icon">✕</div>
+            <h3>Connection Error</h3>
+            <p id="error-text">Could not connect to the Prolog backend server. Please ensure SWI-Prolog is running on port 8060.</p>
+        </div>
+
+        <!-- ===== RESULTS SECTION ===== -->
+        <div id="results-section" class="hidden">
+            
+            <!-- Primary Assessment -->
+            <section class="card result-card" id="result-primary">
+                <div class="card-header">
+                    <div class="card-icon icon-result">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                    </div>
+                    <div>
+                        <h2>Assessment Result</h2>
+                        <p class="card-subtitle" id="result-patient-ref"></p>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="result-badge-container">
+                        <span id="result-badge" class="result-badge"></span>
+                    </div>
+                    <p id="result-explanation" class="result-explanation"></p>
+                </div>
+            </section>
+
+            <!-- Categories Overview -->
+            <section class="card" id="result-categories">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                    </div>
+                    <div>
+                        <h2>Categories Evaluated</h2>
+                        <p class="card-subtitle">All assessment categories and their status</p>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="categories-grid" class="categories-grid"></div>
+                </div>
+            </section>
+
+            <!-- Triggered Rules -->
+            <section class="card" id="result-rules">
+                <div class="card-header">
+                    <div class="card-icon icon-rules">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                    </div>
+                    <div>
+                        <h2>Triggered Rules</h2>
+                        <p class="card-subtitle">Rules whose conditions were satisfied by the entered data</p>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="triggered-rules-list"></div>
+                </div>
+            </section>
+
+            <!-- Why This Result -->
+            <section class="card" id="result-why">
+                <div class="card-header">
+                    <div class="card-icon icon-why">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    </div>
+                    <div>
+                        <h2>Why This Result?</h2>
+                        <p class="card-subtitle">Explanation of how the inference engine reached this conclusion</p>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="explanation-content"></div>
+                </div>
+            </section>
+
+            <!-- Patient Facts Submitted -->
+            <section class="card" id="result-facts">
+                <div class="card-header">
+                    <div class="card-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                    </div>
+                    <div>
+                        <h2>Patient Facts Submitted</h2>
+                        <p class="card-subtitle">Data points sent to the Prolog inference engine</p>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div id="facts-list" class="facts-tags"></div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- ===== FOOTER ===== -->
+    <footer id="app-footer">
+        <div class="footer-content">
+            <p class="footer-title">Dengue Risk &amp; Warning-Sign Assessment Expert System</p>
+            <p class="footer-disclaimer">Academic decision-support prototype — Not a medical diagnostic tool</p>
+            <div class="footer-sources">
+                <p><strong>Primary Source:</strong> Sri Lanka National Dengue Control Unit — "National Guidelines on Management of Dengue Fever &amp; Dengue Haemorrhagic Fever in Adults – 2024"</p>
+                <p><strong>Supporting Source:</strong> World Health Organization — Dengue clinical classification and guidance</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>

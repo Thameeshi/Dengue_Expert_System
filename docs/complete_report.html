@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8'>
+<style>
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; margin: 40px; line-height: 1.6; color: #333; max-width: 900px; margin: 0 auto; padding: 40px; }
+h1, h2, h3, h4 { color: #1e293b; border-bottom: 1px solid #e2e8f0; padding-bottom: 8px; }
+h1 { font-size: 26px; border-bottom: 2px solid #2563eb; color: #1e3a8a; }
+h2 { font-size: 20px; margin-top: 30px; color: #1e40af; }
+h3 { font-size: 16px; margin-top: 20px; color: #0f172a; }
+table { border-collapse: collapse; width: 100%; margin: 20px 0; font-size: 14px; }
+th, td { border: 1px solid #cbd5e1; padding: 10px 12px; text-align: left; }
+th { background-color: #f1f5f9; font-weight: 600; color: #0f172a; }
+tr:nth-child(even) { background-color: #f8fafc; }
+code { background-color: #f1f5f9; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 13px; color: #0f172a; }
+pre { background-color: #0f172a; color: #f8fafc; padding: 16px; border-radius: 8px; overflow-x: auto; }
+pre code { background-color: transparent; color: inherit; padding: 0; }
+blockquote { border-left: 4px solid #2563eb; margin: 0; padding-left: 16px; color: #475569; background: #eff6ff; padding: 10px 16px; border-radius: 0 4px 4px 0; }
+</style>
+</head>
+<body>
+<h1>Dengue Risk and Warning-Sign Assessment Expert System</h1>
+<h2>Complete Academic Report &amp; Documentation</h2>
+<hr />
+<h2>1. Title Page</h2>
+<p><strong>Title:</strong> Dengue Risk and Warning-Sign Assessment Expert System<br />
+<strong>Subtitle:</strong> Rule-Based Clinical Decision-Support Prototype<br />
+<strong>Course:</strong> Expert Systems / Artificial Intelligence Assignment<br />
+<strong>Technology:</strong> SWI-Prolog (Knowledge Base &amp; Inference Engine) + Web-based GUI (HTML/CSS/JS)<br />
+<strong>Date:</strong> September 2026  </p>
+<hr />
+<h2>2. Executive Summary &amp; Problem Definition</h2>
+<h3>2.1 Context &amp; Problem</h3>
+<p>Dengue fever is a mosquito-borne viral infection endemic in tropical regions, including Sri Lanka. Clinical management of dengue requires rapid, systematic assessment of disease severity because the illness can progress from a mild febrile phase to life-threatening severe dengue (plasma leakage, shock, severe bleeding, or organ impairment). </p>
+<p>In busy clinical settings, healthcare staff must systematically check multiple signs, symptoms, and laboratory findings against established guidelines. An <strong>Expert System</strong> provides structured, transparent decision support by encoding official medical classification criteria into formal logic rules.</p>
+<h3>2.2 System Scope &amp; Purpose</h3>
+<p>This system takes patient-provided clinical observations and systematically evaluates them against <strong>31 source-derived decision rules</strong> and <strong>25 clinical facts</strong>.</p>
+<ul>
+<li><strong>What the system specializes in:</strong></li>
+<li>Dengue risk categorization (<em>Probable Dengue</em>, <em>Dengue with Warning Signs</em>, <em>Severe Dengue</em>)</li>
+<li>Warning sign detection (<em>Abdominal pain, persistent vomiting, fluid accumulation, mucosal bleeding, lethargy, liver enlargement &gt;2cm, haematocrit/platelet changes</em>)</li>
+<li>Critical phase transition monitoring alerts (<em>Days 3–7 phase transition</em>)</li>
+<li>
+<p>Explainable reasoning trace (identifying exactly which rules triggered and why)</p>
+</li>
+<li>
+<p><strong>What the system does NOT do:</strong></p>
+</li>
+<li>Does NOT diagnose dengue or replace healthcare professionals.</li>
+<li>Does NOT provide treatment or fluid management protocols.</li>
+<li>Does NOT invent custom rules outside published guidelines.</li>
+</ul>
+<hr />
+<h2>3. Academic &amp; Requirement Compliance Statement</h2>
+<p>This implementation strictly complies with all academic and Moodle assignment guidelines:</p>
+<ol>
+<li><strong>At Least 20 Rules Requirement:</strong>  </li>
+<li>Encodes <strong>31 distinct rules</strong> (<code>R01</code> through <code>R31</code>) in SWI-Prolog.</li>
+<li><strong>Strict Medical Knowledge Source Rule:</strong>  </li>
+<li><strong>No rules were invented</strong> or arbitrarily generated.</li>
+<li><strong>No LLM was used</strong> to generate medical rules.</li>
+<li>All rules and facts are derived from authoritative published guidelines:<ul>
+<li><strong>Primary Source:</strong> Sri Lanka National Dengue Control Unit, <em>"National Guidelines on Management of Dengue Fever &amp; Dengue Haemorrhagic Fever in Adults – 2024"</em>, Ministry of Health, Sri Lanka.</li>
+<li><strong>Supporting Source:</strong> World Health Organization (WHO), <em>Dengue: Guidelines for Diagnosis, Treatment, Prevention and Control</em> (Geneva).</li>
+</ul>
+</li>
+<li><strong>Annex &amp; Decision-Making Code Requirement:</strong>  </li>
+<li>Includes <strong>Annex A</strong> (Complete 25 Facts), <strong>Annex B</strong> (Complete 31 IF-THEN Rules + Prolog code), and <strong>Annex C</strong> (Source Traceability &amp; Priority Explanation).</li>
+<li><strong>Explanation &amp; System Diagram Requirement:</strong>  </li>
+<li>Contains architecture diagrams, data flow diagrams, and a step-by-step reasoning trace mechanism.</li>
+<li><strong>No Theory Bloat / Clear &amp; Concise:</strong>  </li>
+<li>Focused entirely on knowledge representation, inference mechanism, code architecture, test results, and user guide.</li>
+</ol>
+<hr />
+<h2>4. System Architecture &amp; Flow Diagram</h2>
+<h3>4.1 Layered Architecture Diagram</h3>
+<pre><code>┌─────────────────────────────────────────────────────┐
+│                     PATIENT                         │
+│              (User / Lecturer)                      │
+└─────────────────────┬───────────────────────────────┘
+                      │
+                      ▼
+┌─────────────────────────────────────────────────────┐
+│              PATIENT INPUT FORM                     │
+│                                                     │
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐             │
+│  │ Patient  │ │ Symptoms │ │ Warning  │             │
+│  │  Info    │ │          │ │  Signs   │             │
+│  └──────────┘ └──────────┘ └──────────┘             │
+│  ┌──────────┐ ┌──────────┐                         │
+│  │ Severe   │ │ Disease  │                         │
+│  │Indicators│ │  Phase   │                         │
+│  └──────────┘ └──────────┘                         │
+│                                                     │
+│  frontend/index.html + app.js                       │
+└─────────────────────┬───────────────────────────────┘
+                      │ HTTP POST /assess
+                      │ JSON: { symptoms: [...], day_of_illness: N }
+                      ▼
+┌─────────────────────────────────────────────────────┐
+│              FACT EXTRACTION                        │
+│                                                     │
+│  Converts user selections to Prolog-compatible      │
+│  atom list: [high_fever, nausea_vomiting, ...]      │
+│                                                     │
+│  backend/main.pl (handle_assess)                    │
+└─────────────────────┬───────────────────────────────┘
+                      │
+                      ▼
+┌─────────────────────────────────────────────────────┐
+│          PROLOG KNOWLEDGE BASE                      │
+│                                                     │
+│  ┌─────────────────────────────────────────┐        │
+│  │  FACTS (F01–F25)                        │        │
+│  │  • Dengue-compatible symptoms (F01–F07)  │        │
+│  │  • Warning signs (F08–F14)              │        │
+│  │  • Severe dengue facts (F15–F21)        │        │
+│  │  • Disease phase facts (F22–F25)        │        │
+│  └─────────────────────────────────────────┘        │
+│                                                     │
+│  ┌─────────────────────────────────────────┐        │
+│  │  RULES (R01–R31)                        │        │
+│  │  • Probable dengue (R01–R07)            │        │
+│  │  • Warning signs (R08–R14)              │        │
+│  │  • Dengue + warning signs (R15–R21)     │        │
+│  │  • Severe dengue (R22–R28)              │        │
+│  │  • Critical phase (R29–R31)             │        │
+│  └─────────────────────────────────────────┘        │
+│                                                     │
+│  backend/knowledge_base.pl                          │
+└─────────────────────┬───────────────────────────────┘
+                      │
+                      ▼
+┌─────────────────────────────────────────────────────┐
+│            INFERENCE ENGINE                         │
+│                                                     │
+│  1. Clear previous patient facts (retractall)       │
+│  2. Assert current patient facts (dynamic)          │
+│  3. Evaluate rules via backward chaining            │
+│  4. Collect triggered rules with explanations       │
+│  5. Determine primary assessment (priority)         │
+│  6. Clear patient facts after session               │
+│                                                     │
+│  backend/inference_engine.pl                        │
+└─────────────────────┬───────────────────────────────┘
+                      │
+                      ▼
+┌─────────────────────────────────────────────────────┐
+│           DERIVED CONCLUSIONS                       │
+│                                                     │
+│  ┌────────────┐ ┌────────────┐ ┌────────────┐     │
+│  │  Probable  │ │  Warning   │ │  Severe    │     │
+│  │  Dengue    │ │  Signs     │ │  Dengue    │     │
+│  └────────────┘ └────────────┘ └────────────┘     │
+│  ┌────────────┐ ┌────────────┐                     │
+│  │  Critical  │ │  Urgent    │                     │
+│  │  Phase     │ │  Assessment│                     │
+│  └────────────┘ └────────────┘                     │
+└─────────────────────┬───────────────────────────────┘
+                      │
+                      ▼
+┌─────────────────────────────────────────────────────┐
+│         DECISION EXPLANATION                        │
+│                                                     │
+│  • Rule ID (R01, R02, ...)                          │
+│  • IF conditions satisfied                          │
+│  • THEN conclusion derived                          │
+│  • Patient facts that matched                       │
+│                                                     │
+│  backend/knowledge_base.pl (all_triggered_rules/1)  │
+└─────────────────────┬───────────────────────────────┘
+                      │ HTTP JSON Response
+                      ▼
+┌─────────────────────────────────────────────────────┐
+│              GUI RESULT DISPLAY                     │
+│                                                     │
+│  • Primary Assessment Banner                        │
+│  • Clinical Recommendation                          │
+│  • Triggered Rules &amp; Explanations                   │
+│  • Fact Summary Trace                               │
+│                                                     │
+│  frontend/index.html (results container)            │
+└─────────────────────────────────────────────────────┘
+</code></pre>
+<h3>4.2 Data Flow Summary</h3>
+<pre><code>User Form Input ──&gt; JSON POST ──&gt; Fact Extraction ──&gt; SWI-Prolog Backward Chaining ──&gt; Triggered Rule Trace ──&gt; JSON Response ──&gt; Web GUI Render
+</code></pre>
+<hr />
+<h2>5. Knowledge Representation &amp; Inference Mechanism</h2>
+<h3>5.1 Dynamic Fact Management</h3>
+<p>Patient facts in this system are non-persistent and transient. To avoid cross-contamination between different patients, the system uses dynamic assertion (<code>assertz/1</code>) and retraction (<code>retractall/1</code>).</p>
+<pre><code class="language-prolog">:- dynamic patient_fact/1.
+:- dynamic day_of_illness/1.
+
+clear_patient_facts :-
+    retractall(patient_fact(_)),
+    retractall(day_of_illness(_)).
+</code></pre>
+<h3>5.2 Inference Strategy: Goal-Driven Backward Chaining</h3>
+<p>SWI-Prolog natively operates using <strong>backward chaining</strong> (goal-directed reasoning). When evaluating a patient:
+1. The engine sets a high-level goal (e.g., <code>severe_dengue</code>).
+2. Prolog searches the knowledge base to see if any sub-goals or condition predicates (e.g., <code>patient_fact(severe_plasma_leakage)</code>) are satisfied by the current patient facts.
+3. If <code>severe_dengue</code> fails, it moves to evaluate <code>urgent_medical_assessment</code>, <code>dengue_with_warning_signs</code>, <code>probable_dengue</code>, and <code>critical_phase_monitoring</code>.</p>
+<h3>5.3 Display Priority Hierarchy</h3>
+<p>When a patient satisfies multiple rule conclusions simultaneously (e.g., a patient has both <code>probable_dengue</code> and <code>severe_dengue</code>), the system formats the primary display banner according to a clinical priority hierarchy:</p>
+<ol>
+<li><strong>Severe Dengue</strong> <em>(Highest Priority — Emergency)</em></li>
+<li><strong>Urgent Medical Assessment Required</strong></li>
+<li><strong>Dengue with Warning Signs</strong></li>
+<li><strong>Probable Dengue</strong></li>
+<li><strong>Critical-Phase Monitoring Required</strong></li>
+<li><strong>No Supplied Rule Triggered</strong></li>
+</ol>
+<blockquote>
+<p><strong>Note:</strong> This priority ranking is an output display convention for clinical triage visibility, not a modified medical rule.</p>
+</blockquote>
+<hr />
+<h2>6. Implementation &amp; Code Structure</h2>
+<p>The project is structured in a clean, modular architecture:</p>
+<pre><code>Dengue_ES/
+├── backend/
+│   ├── knowledge_base.pl    # Facts (F01-F25), Rules (R01-R31), &amp; Explanations
+│   ├── inference_engine.pl  # Dynamic fact management &amp; backward chaining engine
+│   └── main.pl              # HTTP REST Server API &amp; CORS configuration
+├── frontend/
+│   ├── index.html           # Web UI layout &amp; patient entry form
+│   ├── style.css            # Custom CSS layout &amp; design system
+│   └── app.js               # API fetch controller &amp; dynamic result renderer
+├── tests/
+│   └── test_cases.pl        # Automated Prolog test suite (8 clinical scenarios)
+├── docs/
+│   ├── complete_report.md   # Consolidated academic report (this document)
+│   ├── report.md            # Standard report
+│   ├── annex_rules.md       # Detailed Annexes A, B, and C
+│   ├── sources.md           # Source bibliography &amp; traceability
+│   └── system_diagram.md    # System architecture text &amp; diagrams
+└── README.md                # Quick-start guide for lecturer
+</code></pre>
+<hr />
+<h2>7. Verification &amp; Automated Test Suite</h2>
+<p>To ensure absolute correctness, an automated Prolog test suite (<code>tests/test_cases.pl</code>) executes 8 comprehensive clinical scenarios:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Test #</th>
+<th style="text-align: left;">Clinical Test Scenario</th>
+<th style="text-align: left;">Asserted Patient Facts</th>
+<th style="text-align: left;">Expected Conclusion</th>
+<th style="text-align: center;">Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><strong>1</strong></td>
+<td style="text-align: left;">Probable Dengue (Fever + Nausea + Rash)</td>
+<td style="text-align: left;"><code>high_fever</code>, <code>nausea_vomiting</code>, <code>skin_rash</code></td>
+<td style="text-align: left;">Probable Dengue (<code>r01</code>)</td>
+<td style="text-align: center;"><strong>PASS</strong></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>2</strong></td>
+<td style="text-align: left;">Probable Dengue (Fever + Nausea + Aches)</td>
+<td style="text-align: left;"><code>high_fever</code>, <code>nausea_vomiting</code>, <code>muscle_joint_pain</code></td>
+<td style="text-align: left;">Probable Dengue (<code>r02</code>)</td>
+<td style="text-align: center;"><strong>PASS</strong></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>3</strong></td>
+<td style="text-align: left;">Warning Signs (Fever + Rash + Vomiting)</td>
+<td style="text-align: left;"><code>high_fever</code>, <code>nausea_vomiting</code>, <code>skin_rash</code>, <code>persistent_vomiting</code></td>
+<td style="text-align: left;">Dengue with Warning Signs (<code>r01</code>, <code>r07</code>, <code>r09</code>, <code>r16</code>)</td>
+<td style="text-align: center;"><strong>PASS</strong></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>4</strong></td>
+<td style="text-align: left;">Warning Signs (Fever + Bleeding)</td>
+<td style="text-align: left;"><code>high_fever</code>, <code>nausea_vomiting</code>, <code>skin_rash</code>, <code>mucosal_bleeding</code></td>
+<td style="text-align: left;">Dengue with Warning Signs (<code>r01</code>, <code>r07</code>, <code>r11</code>, <code>r18</code>)</td>
+<td style="text-align: center;"><strong>PASS</strong></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>5</strong></td>
+<td style="text-align: left;">Severe Dengue (Leakage + Shock)</td>
+<td style="text-align: left;"><code>severe_plasma_leakage</code>, <code>shock</code></td>
+<td style="text-align: left;">Severe Dengue (<code>r22</code>, <code>r25</code>)</td>
+<td style="text-align: center;"><strong>PASS</strong></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>6</strong></td>
+<td style="text-align: left;">Severe Dengue (Liver AST/ALT ≥ 1000)</td>
+<td style="text-align: left;"><code>ast_alt_1000_or_more</code></td>
+<td style="text-align: left;">Severe Dengue (<code>r27</code>)</td>
+<td style="text-align: center;"><strong>PASS</strong></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>7</strong></td>
+<td style="text-align: left;">Critical Phase (Day 5 + Temp Decrease)</td>
+<td style="text-align: left;"><code>day_of_illness(5)</code>, <code>temperature_decreasing</code></td>
+<td style="text-align: left;">Critical-Phase Monitoring (<code>r29</code>)</td>
+<td style="text-align: center;"><strong>PASS</strong></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>8</strong></td>
+<td style="text-align: left;">Urgent Assessment (Day 5 + Abdominal Pain)</td>
+<td style="text-align: left;"><code>day_of_illness(5)</code>, <code>abdominal_pain</code></td>
+<td style="text-align: left;">Urgent Medical Assessment (<code>r08</code>, <code>r30</code>)</td>
+<td style="text-align: center;"><strong>PASS</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Test Output:</strong> <code>8 / 8 Tests Passed (100% Success Rate)</code>.</p>
+<hr />
+<h2>8. User Guide — How to Run Locally</h2>
+<h3>Option A: Run the Web-Based GUI (Recommended)</h3>
+<ol>
+<li>
+<p><strong>Start the Prolog HTTP Server</strong>:
+   Open terminal inside <code>Dengue_ES/</code> directory and execute:
+   <code>bash
+   swipl backend/main.pl</code>
+   <em>Output:</em> <code>Server running at http://localhost:8060</code></p>
+</li>
+<li>
+<p><strong>Open the Web GUI</strong>:</p>
+</li>
+<li>Double-click <a href="file:///Users/user/Desktop/Dengue_ES/frontend/index.html">frontend/index.html</a> in Finder to open directly in Chrome/Safari/Edge.</li>
+<li>
+<p><em>OR</em> run <code>python3 -m http.server 8080</code> and navigate to <code>http://localhost:8080/frontend/</code>.</p>
+</li>
+<li>
+<p><strong>Evaluate Assessment</strong>:</p>
+</li>
+<li>Check desired symptoms/signs and click <strong>"Evaluate Assessment"</strong>.</li>
+</ol>
+<h3>Option B: Run Automated Unit Tests in Terminal</h3>
+<pre><code class="language-bash">swipl -s tests/test_cases.pl -g &quot;run_all_tests, halt.&quot;
+</code></pre>
+<hr />
+<h2>ANNEX A — Complete Knowledge Base Facts (F01–F25)</h2>
+<h3>A. Dengue-Suspected Clinical Facts</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Fact ID</th>
+<th style="text-align: left;">Fact Description</th>
+<th style="text-align: left;">Prolog Representation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><strong>F01</strong></td>
+<td style="text-align: left;">High fever commonly present in dengue</td>
+<td style="text-align: left;"><code>patient_fact(high_fever)</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>F02</strong></td>
+<td style="text-align: left;">Severe headache</td>
+<td style="text-align: left;"><code>patient_fact(severe_headache)</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>F03</strong></td>
+<td style="text-align: left;">Retro-orbital pain (behind eyes)</td>
+<td style="text-align: left;"><code>patient_fact(pain_behind_eyes)</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>F04</strong></td>
+<td style="text-align: left;">Muscle / joint pain (myalgia/arthralgia)</td>
+<td style="text-align: left;"><code>patient_fact(muscle_joint_pain)</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>F05</strong></td>
+<td style="text-align: left;">Nausea / vomiting</td>
+<td style="text-align: left;"><code>patient_fact(nausea_vomiting)</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>F06</strong></td>
+<td style="text-align: left;">Skin rash</td>
+<td style="text-align: left;"><code>patient_fact(skin_rash)</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>F07</strong></td>
+<td style="text-align: left;">Dengue febrile phase duration (2–7 days)</td>
+<td style="text-align: left;"><code>illness_duration_days(2, 7)</code></td>
+</tr>
+</tbody>
+</table>
+<h3>B. Warning-Sign Facts</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Fact ID</th>
+<th style="text-align: left;">Fact Description</th>
+<th style="text-align: left;">Prolog Representation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><strong>F08</strong></td>
+<td style="text-align: left;">Abdominal pain or tenderness</td>
+<td style="text-align: left;"><code>patient_fact(abdominal_pain)</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>F09</strong></td>
+<td style="text-align: left;">Persistent vomiting</td>
+<td style="text-align: left;"><code>patient_fact(persistent_vomiting)</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>F10</strong></td>
+<td style="text-align: left;">Clinical fluid accumulation (ascites, pleural effusion)</td>
+<td style="text-align: left;"><code>patient_fact(clinical_fluid_accumulation)</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>F11</strong></td>
+<td style="text-align: left;">Mucosal bleeding (epistaxis, gum bleed)</td>
+<td style="text-align: left;"><code>patient_fact(mucosal_bleeding)</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>F12</strong></td>
+<td style="text-align: left;">Lethargy or restlessness</td>
+<td style="text-align: left;"><code>patient_fact(lethargy)</code>, <code>patient_fact(restlessness)</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>F13</strong></td>
+<td style="text-align: left;">Hepatomegaly (liver enlargement &gt; 2 cm)</td>
+<td style="text-align: left;"><code>patient_fact(liver_enlargement_over_2cm)</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>F14</strong></td>
+<td style="text-align: left;">Concurrent high haematocrit &amp; rapid platelet drop</td>
+<td style="text-align: left;"><code>patient_fact(increased_haematocrit)</code>, <code>patient_fact(rapid_platelet_decrease)</code></td>
+</tr>
+</tbody>
+</table>
+<h3>C. Severe Dengue Facts</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Fact ID</th>
+<th style="text-align: left;">Fact Description</th>
+<th style="text-align: left;">Prolog Representation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><strong>F15</strong></td>
+<td style="text-align: left;">Severe plasma leakage</td>
+<td style="text-align: left;"><code>patient_fact(severe_plasma_leakage)</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>F16</strong></td>
+<td style="text-align: left;">Dengue shock syndrome (DSS)</td>
+<td style="text-align: left;"><code>patient_fact(shock)</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>F17</strong></td>
+<td style="text-align: left;">Respiratory distress due to fluid accumulation</td>
+<td style="text-align: left;"><code>patient_fact(respiratory_distress)</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>F18</strong></td>
+<td style="text-align: left;">Severe bleeding (gastrointestinal / clinical evaluation)</td>
+<td style="text-align: left;"><code>patient_fact(severe_bleeding)</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>F19</strong></td>
+<td style="text-align: left;">Severe organ impairment</td>
+<td style="text-align: left;"><code>patient_fact(severe_organ_impairment)</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>F20</strong></td>
+<td style="text-align: left;">AST or ALT ≥ 1000 U/L</td>
+<td style="text-align: left;"><code>patient_fact(ast_alt_1000_or_more)</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>F21</strong></td>
+<td style="text-align: left;">Impaired consciousness (CNS involvement)</td>
+<td style="text-align: left;"><code>patient_fact(impaired_consciousness)</code></td>
+</tr>
+</tbody>
+</table>
+<h3>D. Disease-Phase &amp; Triage Facts</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Fact ID</th>
+<th style="text-align: left;">Fact Description</th>
+<th style="text-align: left;">Prolog Representation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><strong>F22</strong></td>
+<td style="text-align: left;">Critical phase timeframe (Days 3–7)</td>
+<td style="text-align: left;"><code>critical_phase_day_range(3, 7)</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>F23</strong></td>
+<td style="text-align: left;">Defervescence (temperature decreasing)</td>
+<td style="text-align: left;"><code>patient_fact(temperature_decreasing)</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>F24</strong></td>
+<td style="text-align: left;">Warning signs appearing around phase transition</td>
+<td style="text-align: left;"><code>patient_fact(warning_sign_transition_period)</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>F25</strong></td>
+<td style="text-align: left;">Emergency triage required for severe dengue</td>
+<td style="text-align: left;">Decision-support triage concept</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>ANNEX B — Complete Decision-Making Rules (R01–R31)</h2>
+<h3>Part 1: Probable Dengue Rules (R01–R07)</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Rule ID</th>
+<th style="text-align: left;">IF Conditions</th>
+<th style="text-align: left;">THEN Conclusion</th>
+<th style="text-align: left;">Prolog Code</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><strong>R01</strong></td>
+<td style="text-align: left;">High fever AND nausea/vomiting AND skin rash</td>
+<td style="text-align: left;">Probable Dengue</td>
+<td style="text-align: left;"><code>probable_dengue :- patient_fact(high_fever), patient_fact(nausea_vomiting), patient_fact(skin_rash).</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>R02</strong></td>
+<td style="text-align: left;">High fever AND nausea/vomiting AND muscle/joint pain</td>
+<td style="text-align: left;">Probable Dengue</td>
+<td style="text-align: left;"><code>probable_dengue :- patient_fact(high_fever), patient_fact(nausea_vomiting), patient_fact(muscle_joint_pain).</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>R03</strong></td>
+<td style="text-align: left;">High fever AND nausea/vomiting AND leucopenia</td>
+<td style="text-align: left;">Probable Dengue</td>
+<td style="text-align: left;"><code>probable_dengue :- patient_fact(high_fever), patient_fact(nausea_vomiting), patient_fact(leucopenia).</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>R04</strong></td>
+<td style="text-align: left;">High fever AND skin rash AND muscle/joint pain</td>
+<td style="text-align: left;">Probable Dengue</td>
+<td style="text-align: left;"><code>probable_dengue :- patient_fact(high_fever), patient_fact(skin_rash), patient_fact(muscle_joint_pain).</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>R05</strong></td>
+<td style="text-align: left;">High fever AND skin rash AND leucopenia</td>
+<td style="text-align: left;">Probable Dengue</td>
+<td style="text-align: left;"><code>probable_dengue :- patient_fact(high_fever), patient_fact(skin_rash), patient_fact(leucopenia).</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>R06</strong></td>
+<td style="text-align: left;">High fever AND muscle/joint pain AND leucopenia</td>
+<td style="text-align: left;">Probable Dengue</td>
+<td style="text-align: left;"><code>probable_dengue :- patient_fact(high_fever), patient_fact(muscle_joint_pain), patient_fact(leucopenia).</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>R07</strong></td>
+<td style="text-align: left;">High fever AND any warning sign</td>
+<td style="text-align: left;">Probable Dengue</td>
+<td style="text-align: left;"><code>probable_dengue :- patient_fact(high_fever), warning_sign.</code></td>
+</tr>
+</tbody>
+</table>
+<h3>Part 2: Warning Sign Identification Rules (R08–R14)</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Rule ID</th>
+<th style="text-align: left;">IF Conditions</th>
+<th style="text-align: left;">THEN Conclusion</th>
+<th style="text-align: left;">Prolog Code</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><strong>R08</strong></td>
+<td style="text-align: left;">Abdominal pain or tenderness</td>
+<td style="text-align: left;">Warning Sign Present</td>
+<td style="text-align: left;"><code>warning_sign :- patient_fact(abdominal_pain).</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>R09</strong></td>
+<td style="text-align: left;">Persistent vomiting</td>
+<td style="text-align: left;">Warning Sign Present</td>
+<td style="text-align: left;"><code>warning_sign :- patient_fact(persistent_vomiting).</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>R10</strong></td>
+<td style="text-align: left;">Clinical fluid accumulation</td>
+<td style="text-align: left;">Warning Sign Present</td>
+<td style="text-align: left;"><code>warning_sign :- patient_fact(clinical_fluid_accumulation).</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>R11</strong></td>
+<td style="text-align: left;">Mucosal bleeding</td>
+<td style="text-align: left;">Warning Sign Present</td>
+<td style="text-align: left;"><code>warning_sign :- patient_fact(mucosal_bleeding).</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>R12</strong></td>
+<td style="text-align: left;">Lethargy OR restlessness</td>
+<td style="text-align: left;">Warning Sign Present</td>
+<td style="text-align: left;"><code>warning_sign :- patient_fact(lethargy).</code> / <code>warning_sign :- patient_fact(restlessness).</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>R13</strong></td>
+<td style="text-align: left;">Liver enlargement &gt; 2 cm</td>
+<td style="text-align: left;">Warning Sign Present</td>
+<td style="text-align: left;"><code>warning_sign :- patient_fact(liver_enlargement_over_2cm).</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>R14</strong></td>
+<td style="text-align: left;">High haematocrit AND rapid platelet drop</td>
+<td style="text-align: left;">Warning Sign Present</td>
+<td style="text-align: left;"><code>warning_sign :- patient_fact(increased_haematocrit), patient_fact(rapid_platelet_decrease).</code></td>
+</tr>
+</tbody>
+</table>
+<h3>Part 3: Dengue with Warning Signs Rules (R15–R21)</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Rule ID</th>
+<th style="text-align: left;">IF Conditions</th>
+<th style="text-align: left;">THEN Conclusion</th>
+<th style="text-align: left;">Prolog Code</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><strong>R15</strong></td>
+<td style="text-align: left;">Probable dengue AND abdominal pain</td>
+<td style="text-align: left;">Dengue with Warning Signs</td>
+<td style="text-align: left;"><code>dengue_with_warning_signs :- probable_dengue, warning_sign.</code> (via R08)</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>R16</strong></td>
+<td style="text-align: left;">Probable dengue AND persistent vomiting</td>
+<td style="text-align: left;">Dengue with Warning Signs</td>
+<td style="text-align: left;"><code>dengue_with_warning_signs :- probable_dengue, warning_sign.</code> (via R09)</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>R17</strong></td>
+<td style="text-align: left;">Probable dengue AND fluid accumulation</td>
+<td style="text-align: left;">Dengue with Warning Signs</td>
+<td style="text-align: left;"><code>dengue_with_warning_signs :- probable_dengue, warning_sign.</code> (via R10)</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>R18</strong></td>
+<td style="text-align: left;">Probable dengue AND mucosal bleeding</td>
+<td style="text-align: left;">Dengue with Warning Signs</td>
+<td style="text-align: left;"><code>dengue_with_warning_signs :- probable_dengue, warning_sign.</code> (via R11)</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>R19</strong></td>
+<td style="text-align: left;">Probable dengue AND lethargy/restlessness</td>
+<td style="text-align: left;">Dengue with Warning Signs</td>
+<td style="text-align: left;"><code>dengue_with_warning_signs :- probable_dengue, warning_sign.</code> (via R12)</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>R20</strong></td>
+<td style="text-align: left;">Probable dengue AND liver enlargement &gt; 2cm</td>
+<td style="text-align: left;">Dengue with Warning Signs</td>
+<td style="text-align: left;"><code>dengue_with_warning_signs :- probable_dengue, warning_sign.</code> (via R13)</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>R21</strong></td>
+<td style="text-align: left;">Probable dengue AND HCT rise + platelet drop</td>
+<td style="text-align: left;">Dengue with Warning Signs</td>
+<td style="text-align: left;"><code>dengue_with_warning_signs :- probable_dengue, warning_sign.</code> (via R14)</td>
+</tr>
+</tbody>
+</table>
+<h3>Part 4: Severe Dengue Rules (R22–R28)</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Rule ID</th>
+<th style="text-align: left;">IF Conditions</th>
+<th style="text-align: left;">THEN Conclusion</th>
+<th style="text-align: left;">Prolog Code</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><strong>R22</strong></td>
+<td style="text-align: left;">Severe plasma leakage</td>
+<td style="text-align: left;">Severe Dengue</td>
+<td style="text-align: left;"><code>severe_dengue :- patient_fact(severe_plasma_leakage).</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>R23</strong></td>
+<td style="text-align: left;">Severe bleeding</td>
+<td style="text-align: left;">Severe Dengue</td>
+<td style="text-align: left;"><code>severe_dengue :- patient_fact(severe_bleeding).</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>R24</strong></td>
+<td style="text-align: left;">Severe organ impairment</td>
+<td style="text-align: left;">Severe Dengue</td>
+<td style="text-align: left;"><code>severe_dengue :- patient_fact(severe_organ_impairment).</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>R25</strong></td>
+<td style="text-align: left;">Severe plasma leakage AND shock</td>
+<td style="text-align: left;">Severe Dengue</td>
+<td style="text-align: left;"><code>severe_dengue :- patient_fact(severe_plasma_leakage), patient_fact(shock).</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>R26</strong></td>
+<td style="text-align: left;">Severe leakage + fluid accum. + respiratory distress</td>
+<td style="text-align: left;">Severe Dengue</td>
+<td style="text-align: left;"><code>severe_dengue :- patient_fact(severe_plasma_leakage), patient_fact(clinical_fluid_accumulation), patient_fact(respiratory_distress).</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>R27</strong></td>
+<td style="text-align: left;">AST/ALT ≥ 1000 U/L</td>
+<td style="text-align: left;">Severe Dengue</td>
+<td style="text-align: left;"><code>severe_dengue :- patient_fact(ast_alt_1000_or_more).</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>R28</strong></td>
+<td style="text-align: left;">Impaired consciousness</td>
+<td style="text-align: left;">Severe Dengue</td>
+<td style="text-align: left;"><code>severe_dengue :- patient_fact(impaired_consciousness).</code></td>
+</tr>
+</tbody>
+</table>
+<h3>Part 5: Critical Phase &amp; Triage Rules (R29–R31)</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Rule ID</th>
+<th style="text-align: left;">IF Conditions</th>
+<th style="text-align: left;">THEN Conclusion</th>
+<th style="text-align: left;">Prolog Code</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><strong>R29</strong></td>
+<td style="text-align: left;">Day of illness 3–7 AND temperature decreasing</td>
+<td style="text-align: left;">Critical-Phase Monitoring Required</td>
+<td style="text-align: left;"><code>critical_phase_monitoring :- day_of_illness(Day), critical_phase_day_range(Start, End), Day &gt;= Start, Day =&lt; End, patient_fact(temperature_decreasing).</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>R30</strong></td>
+<td style="text-align: left;">Day of illness 3–7 AND warning sign present</td>
+<td style="text-align: left;">Urgent Medical Assessment Required</td>
+<td style="text-align: left;"><code>urgent_medical_assessment :- day_of_illness(Day), critical_phase_day_range(Start, End), Day &gt;= Start, Day =&lt; End, warning_sign.</code></td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>R31</strong></td>
+<td style="text-align: left;">Temp decreasing AND warning signs appearing</td>
+<td style="text-align: left;">Not Recovery; Urgent Assessment</td>
+<td style="text-align: left;"><code>not_recovery_despite_temp_decrease :- patient_fact(temperature_decreasing), warning_sign.</code> / <code>urgent_medical_assessment :- not_recovery_despite_temp_decrease.</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>ANNEX C — Knowledge Sources &amp; Rule Traceability Table</h2>
+<p>All facts and rules in this Expert System are derived from published clinical guidelines. <strong>No rules were invented or arbitrarily generated.</strong></p>
+<h3>Source Citations:</h3>
+<ol>
+<li><strong>Primary Reference:</strong> Sri Lanka National Dengue Control Unit. <em>National Guidelines on Management of Dengue Fever &amp; Dengue Haemorrhagic Fever in Adults – 2024</em>. Ministry of Health, Sri Lanka.</li>
+<li><strong>Secondary Reference:</strong> World Health Organization. <em>Dengue: Guidelines for Diagnosis, Treatment, Prevention and Control</em>. WHO, Geneva.</li>
+<li><strong>Tertiary Reference:</strong> World Health Organization. <em>"Dengue and severe dengue"</em> WHO Fact Sheet.</li>
+</ol>
+<h3>Fact &amp; Rule Source Mapping:</h3>
+<ul>
+<li><strong>F01–F07 &amp; R01–R07 (Probable Dengue):</strong> Sri Lanka 2024 Guidelines, Section 2.1; WHO Dengue Classification Criteria.</li>
+<li><strong>F08–F14 &amp; R08–R21 (Warning Signs):</strong> Sri Lanka 2024 Guidelines, Section 2.2; WHO Warning Signs List.</li>
+<li><strong>F15–F21 &amp; R22–R28 (Severe Dengue):</strong> Sri Lanka 2024 Guidelines, Section 2.3; WHO Severe Dengue Criteria.</li>
+<li><strong>F22–F25 &amp; R29–R31 (Critical Phase):</strong> Sri Lanka 2024 Guidelines, Section 3.1 (Febrile to Critical Phase Transition Management).</li>
+</ul>
+<hr />
+<h2>9. References</h2>
+<ol>
+<li>Sri Lanka National Dengue Control Unit. <em>National Guidelines on Management of Dengue Fever &amp; Dengue Haemorrhagic Fever in Adults – 2024</em>. Ministry of Health, Sri Lanka.</li>
+<li>World Health Organization. <em>Dengue: Guidelines for Diagnosis, Treatment, Prevention and Control</em>. World Health Organization, Geneva, Switzerland.</li>
+<li>World Health Organization. <em>"Dengue and severe dengue"</em> Fact Sheet. Available online: <code>https://www.who.int/news-room/fact-sheets/detail/dengue-and-severe-dengue</code></li>
+<li>Clocksin, W. F., &amp; Mellish, C. S. <em>Programming in Prolog: Using the ISO Standard</em>. Springer Science &amp; Business Media.</li>
+<li>Wielemaker, J. et al. <em>SWI-Prolog Reference Manual</em>. Available online: <code>https://www.swi-prolog.org/pldoc/</code></li>
+</ol>
+</body>
+</html>

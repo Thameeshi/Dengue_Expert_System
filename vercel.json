@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "rewrites": [
+    { "source": "/api/assess", "destination": "/api/assess.js" },
+    { "source": "/health", "destination": "/api/health.js" },
+    { "source": "/rules", "destination": "/api/rules.js" },
+    { "source": "/", "destination": "/frontend/index.html" },
+    { "source": "/(.*)", "destination": "/frontend/$1" }
+  ]
+}
