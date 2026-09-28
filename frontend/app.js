@@ -16,10 +16,9 @@
 // CONFIGURATION
 // ============================================================
 
-// Automatically use relative /api/assess endpoint when hosted on Vercel, or localhost when running locally
-const API_BASE_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && window.location.port === '8060'
-    ? 'http://localhost:8060'
-    : '/api';
+// Robust API URL detection for local file://, local server 8060, and Vercel cloud
+const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:';
+const API_BASE_URL = isLocal ? 'http://localhost:8060' : '/api';
 
 // Human-readable labels for symptom/fact atoms
 const FACT_LABELS = {
