@@ -442,3 +442,139 @@ function formatFactName(name) {
         .replace(/_/g, ' ')
         .replace(/\b\w/g, l => l.toUpperCase());
 }
+
+// ============================================================
+// NEW FEATURE 1: CLINICAL TEST CASE PRESET LOADERS
+// ============================================================
+
+const PRESET_CASES = {
+    probable: {
+        patient_id: 'P-101',
+        day_of_illness: 2,
+        symptoms: ['high_fever', 'nausea_vomiting', 'skin_rash']
+    },
+    warning: {
+        patient_id: 'P-102',
+        day_of_illness: 4,
+        symptoms: ['high_fever', 'nausea_vomiting', 'skin_rash', 'abdominal_pain', 'persistent_vomiting']
+    },
+    severe: {
+        patient_id: 'P-103',
+        day_of_illness: 5,
+        symptoms: ['severe_plasma_leakage', 'shock', 'ast_alt_1000_or_more']
+    },
+    critical: {
+        patient_id: 'P-104',
+        day_of_illness: 5,
+        symptoms: ['high_fever', 'temperature_decreasing', 'abdominal_pain']
+    }
+};
+
+function applyPreset(presetKey) {
+    const preset = PRESET_CASES[presetKey];
+    if (!preset) return;
+
+    // Reset form
+    document.getElementById('assessment-form').reset();
+
+    // Set basic info
+    document.getElementById('patient-id').value = preset.patient_id;
+    document.getElementById('day-of-illness').value = preset.day_of_illness;
+
+    // Check symptoms
+    preset.symptoms.forEach(sym => {
+        const checkbox = document.querySelector(`input[value="${sym}"]`);
+        if (checkbox) checkbox.checked = true;
+    });
+
+    // Auto-evaluate for seamless demo
+    runAssessment();
+}
+
+// ============================================================
+// NEW FEATURE 2: PROLOG KNOWLEDGE BASE RULE EXPLORER MODAL
+// ============================================================
+
+let allRulesData = [];
+
+async function openRulesModal() {
+    const modal = document.getElementById('rules-modal');
+    modal.classList.remove('hidden');
+
+    if (allRulesData.length === 0) {
+        try {
+            const res = await fetch(`${API_BASE_URL}/rules`);
+            if (res.ok) {
+                const data = await res.json();
+                allRulesData = data.rules.rules || data.rules || [];
+                renderRulesList(allRulesData);
+            }
+        } catch (e) {
+            console.error('Failed to load rules for explorer', e);
+        }
+    }
+}
+
+function closeRulesModal() {
+    document.getElementById('rules-modal').classList.add('hidden');
+}
+
+function renderRulesList(rules) {
+    const listEl = document.getElementById('rules-modal-list');
+    listEl.innerHTML = '';
+
+    if (!rules || rules.length === 0) {
+        listEl.innerHTML = '<p style="color: var(--color-text-muted);">No rules found.</p>';
+        return;
+    }
+
+    rules.forEach(rule => {
+        const card = document.createElement('div');
+        card.className = 'rule-card';
+        const ruleId = (rule.rule_id || rule.id || '').toUpperCase();
+        const desc = rule.description || 'No description available';
+        
+        card.innerHTML = `
+            <span class="rule-card-badge">Rule ${ruleId}</span>
+            <div class="rule-card-desc">${desc}</div>
+        `;
+        listEl.appendChild(card);
+    });
+}
+
+// Event Listeners for New Features
+document.addEventListener('DOMContentLoaded', () => {
+    // Preset buttons
+    document.querySelectorAll('.preset-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const preset = e.target.getAttribute('data-preset');
+            applyPreset(preset);
+        });
+    });
+
+    // Modal triggers
+    const openBtn = document.getElementById('btn-open-rules');
+    const closeBtn = document.getElementById('btn-close-rules');
+    const modal = document.getElementById('rules-modal');
+    const searchInput = document.getElementById('rule-search-input');
+
+    if (openBtn) openBtn.addEventListener('click', openRulesModal);
+    if (closeBtn) closeBtn.addEventListener('click', closeRulesModal);
+    if (modal) {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeRulesModal();
+        });
+    }
+
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            const filtered = allRulesData.filter(r => 
+                (r.rule_id && r.rule_id.toLowerCase().includes(query)) ||
+                (r.description && r.description.toLowerCase().includes(query))
+            );
+            renderRulesList(filtered);
+        });
+    }
+});
+
