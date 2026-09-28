@@ -506,7 +506,7 @@ async function openRulesModal() {
             const res = await fetch(`${API_BASE_URL}/rules`);
             if (res.ok) {
                 const data = await res.json();
-                allRulesData = data.rules.rules || data.rules || [];
+                allRulesData = Array.isArray(data.rules) ? data.rules : (data.rules ? data.rules.rules : []);
                 renderRulesList(allRulesData);
             }
         } catch (e) {
